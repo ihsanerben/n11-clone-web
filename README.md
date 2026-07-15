@@ -1,32 +1,41 @@
-# React + TypeScript + Vite
+# Pazar — Marketplace Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Çok satıcılı e-ticaret uygulamasının React tabanlı frontend'i. Projenin kapsamı `PROJECT_PLAN.md`, frontend mimarisi ve değiştirilemez kuralları ise `FE-STANDARDS.md` tarafından belirlenir.
 
-Currently, two official plugins are available:
+## Teknolojiler
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19, TypeScript ve Vite
+- Tailwind CSS
+- React Router
+- TanStack Query
+- React Hook Form
+- Oxlint
 
-## React Compiler
+## Yerel geliştirme
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Node.js 22 önerilir.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`.env.local` içindeki `VITE_API_BASE_URL`, çalışan backend adresini göstermelidir. Varsayılan yerel değer `http://localhost:8080` şeklindedir.
+
+## Kontroller
+
+```bash
+npm run lint
+npm run build
+```
+
+Her pull request'te aynı kontroller GitHub Actions tarafından çalıştırılır. `main` branch'i Vercel production deploy'una bağlıdır.
+
+## Ortam değişkenleri
+
+| Değişken | Açıklama |
+|---|---|
+| `VITE_API_BASE_URL` | Backend API'nin kök adresi; sonunda `/` olmadan tanımlanması önerilir. |
+
+API çağrıları refresh token cookie'si için her zaman `credentials: 'include'` seçeneğiyle gönderilir. Access token ilerleyen auth diliminde yalnızca uygulama belleğinde tutulacaktır.

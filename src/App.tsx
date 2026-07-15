@@ -1,13 +1,17 @@
-
-import './App.css'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppLayout } from './app/AppLayout'
+import { HomePage } from './pages/HomePage'
+import { NotFoundPage } from './pages/NotFoundPage'
 
 function App() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        n11 Clone Web
-      </h1>
-    </main>
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<HomePage />} />
+        <Route path="404" element={<NotFoundPage />} />
+        <Route path="*" element={<Navigate replace to="/404" />} />
+      </Route>
+    </Routes>
   )
 }
 
