@@ -104,7 +104,7 @@ Backend ile aynı desen (bkz. `PROJECT_PLAN.md` "Git & Deploy Workflow"):
 
 *(Şu an bu projede kullandığımız teknolojiler — alfabetik sıra)*
 
-Conventional Commits · ESLint · GitHub Actions · React · React Hook Form · React Router · Tailwind CSS · TanStack Query (React Query) · TypeScript · Vercel · Vite
+Conventional Commits · GitHub Actions · Oxlint · React · React Hook Form · React Router · Tailwind CSS · TanStack Query (React Query) · TypeScript · Vercel · Vite
 
 ## 13. Kullanılmayan Ağır Yapılar
 
