@@ -70,6 +70,7 @@ export function AppLayout() {
         </div>
 
         <nav className="mx-auto hidden w-full max-w-7xl items-center justify-between px-6 pb-3 text-sm font-semibold text-slate-600 lg:flex lg:px-8" aria-label="Kategoriler">
+          <Link className="text-brand-700" to="/products">Tüm ürünler</Link>
           {navigationItems.map((item) => <span key={item}>{item}</span>)}
         </nav>
       </header>
