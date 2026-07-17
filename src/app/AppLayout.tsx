@@ -1,11 +1,21 @@
 import { Heart, LogOut, Menu, Search, ShoppingCart, UserRound } from 'lucide-react'
 import { Link, Outlet } from 'react-router-dom'
 import { useAuth } from '../features/auth/useAuth'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const navigationItems = ['Elektronik', 'Moda', 'Ev & Yaşam', 'Kozmetik', 'Spor', 'Kitap']
 
 export function AppLayout() {
   const auth = useAuth()
+  const navigate = useNavigate()
+  const [headerSearch, setHeaderSearch] = useState('')
+
+  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const query = headerSearch.trim()
+    navigate(query ? `/products?search=${encodeURIComponent(query)}` : '/products')
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-slate-950">
@@ -23,15 +33,17 @@ export function AppLayout() {
             pazar<span className="text-amber-500">.</span>
           </Link>
 
-          <label className="relative hidden flex-1 md:block">
+          <form className="relative hidden flex-1 md:block" onSubmit={submitSearch}>
             <span className="sr-only">Ürün ara</span>
             <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" size={20} />
             <input
               className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-12 pr-4 text-sm outline-none transition focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100"
               placeholder="Ürün, kategori veya marka ara"
               type="search"
+              value={headerSearch}
+              onChange={(event) => setHeaderSearch(event.target.value)}
             />
-          </label>
+          </form>
 
           <nav className="ml-auto flex items-center gap-1 sm:gap-2" aria-label="Kullanıcı işlemleri">
             {auth.user?.role === 'USER' && <Link className="hidden text-sm font-bold text-brand-700 sm:block" to="/seller">Satıcı ol</Link>}
@@ -40,7 +52,7 @@ export function AppLayout() {
             <HeaderAction icon={Heart} label="Favoriler" />
             {auth.user ? (
               <>
-                <HeaderAction icon={UserRound} label={auth.user.username} />
+                <Link className="flex items-center gap-2 rounded-xl p-2 text-slate-700 transition hover:bg-slate-100 sm:px-3" to="/addresses"><UserRound aria-hidden="true" size={21} /><span className="hidden text-sm font-semibold xl:inline">{auth.user.username}</span><span className="sr-only xl:hidden">Adreslerim</span></Link>
                 <button
                   className="flex items-center gap-2 rounded-xl p-2 text-slate-700 transition hover:bg-slate-100 sm:px-3"
                   onClick={() => void auth.logout()}
@@ -62,11 +74,11 @@ export function AppLayout() {
         </div>
 
         <div className="px-4 pb-4 md:hidden">
-          <label className="relative block">
+          <form className="relative block" onSubmit={submitSearch}>
             <span className="sr-only">Ürün ara</span>
             <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" size={19} />
-            <input className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none focus:border-brand-500" placeholder="Ürün ara" type="search" />
-          </label>
+            <input className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm outline-none focus:border-brand-500" onChange={(event) => setHeaderSearch(event.target.value)} placeholder="Ürün ara" type="search" value={headerSearch} />
+          </form>
         </div>
 
         <nav className="mx-auto hidden w-full max-w-7xl items-center justify-between px-6 pb-3 text-sm font-semibold text-slate-600 lg:flex lg:px-8" aria-label="Kategoriler">

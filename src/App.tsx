@@ -15,6 +15,8 @@ import { ProductsPage } from './pages/ProductsPage'
 import { ProductDetailPage } from './pages/ProductDetailPage'
 import { SellerProductsPage } from './pages/SellerProductsPage'
 import { AdminProductsPage } from './pages/AdminProductsPage'
+import { AddressesPage } from './pages/AddressesPage'
+import { AdminCategoriesPage } from './pages/AdminCategoriesPage'
 import { useAuth } from './features/auth/useAuth'
 
 function App() {
@@ -40,6 +42,8 @@ function App() {
         <Route path="admin/sellers" element={<RequireRole roles={['ADMIN']}><AdminSellersPage /></RequireRole>} />
         <Route path="seller/products" element={<RequireRole roles={['SELLER']}><SellerProductsPage /></RequireRole>} />
         <Route path="admin/products" element={<RequireRole roles={['ADMIN']}><AdminProductsPage /></RequireRole>} />
+        <Route path="addresses" element={<RequireRole roles={['USER', 'SELLER', 'ADMIN']}><AddressesPage /></RequireRole>} />
+        <Route path="admin/categories" element={<RequireRole roles={['ADMIN']}><AdminCategoriesPage /></RequireRole>} />
         <Route path="404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate replace to="/404" />} />
       </Route>
