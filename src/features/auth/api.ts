@@ -46,3 +46,19 @@ export function resendVerification(email: string) {
     skipAuthRefresh: true,
   })
 }
+
+export function forgotPassword(email: string) {
+  return apiRequest<MessageResponse>('/api/auth/forgot-password', {
+    body: { email },
+    method: 'POST',
+    skipAuthRefresh: true,
+  })
+}
+
+export function resetPassword(token: string, newPassword: string) {
+  return apiRequest<MessageResponse>('/api/auth/reset-password', {
+    body: { token, newPassword },
+    method: 'POST',
+    skipAuthRefresh: true,
+  })
+}

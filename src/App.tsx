@@ -6,6 +6,8 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { CheckEmailPage } from './pages/CheckEmailPage'
 import { VerifyEmailPage } from './pages/VerifyEmailPage'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
+import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { useAuth } from './features/auth/useAuth'
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
         <Route path="register" element={<RegisterPage />} />
         <Route path="check-email" element={<CheckEmailPage />} />
         <Route path="verify-email" element={<VerifyEmailPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route path="404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate replace to="/404" />} />
       </Route>
