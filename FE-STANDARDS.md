@@ -31,6 +31,11 @@ Bu doküman, bu projenin frontend'i için mimari kararları ve kodlama standartl
 - Vite + React + TypeScript, tek sayfa uygulaması (SPA), **tek repo/tek deploy**.
 - Admin paneli ve satıcı paneli **ayrı uygulamalar değil** — aynı app içinde role'e göre kapılı rota grupları (`/admin/*`, `/seller/*`, geri kalanı alıcı deneyimi).
 - Rota koruması yalnızca kullanıcı deneyimi içindir; **gerçek yetkilendirme her zaman backend'e aittir** — FE hiçbir zaman "yetkim var" varsayımıyla veri göstermez, her zaman API'nin 401/403 cevabına güvenir.
+- Okunabilirlik için her statement ayrı satırda tutulur; tek satıra sıkıştırılmış component, hook, event handler veya koşullu blok yazılmaz.
+- Wildcard/barrel importlar yalnızca açıkça yönetilen public export noktalarında kullanılabilir; uygulama kodunda bağımlılıklar açık isimlerle import edilir.
+- Uzun JSX prop'ları, Tailwind class listeleri, method chain'leri ve obje tanımları mantıksal parçalara bölünür. Tekrarlanan veya anlamı gizleyen ifadeler açıklayıcı isimli yardımcı fonksiyon/component/hook'lara çıkarılır.
+- Değişken, fonksiyon ve component adları sorumluluğu açıkça anlatır; `data`, `item`, `service`, `handle` gibi bağlamsız genel isimler tek başına kullanılmaz.
+- Bir dosya tek ana sorumluluğa sahip olur. Birden fazla bağımsız component, type veya API sözleşmesi okunabilirliği bozacak şekilde aynı dosyada toplanmaz.
 
 ## 2. State & Data Fetching
 
@@ -44,6 +49,9 @@ Bu doküman, bu projenin frontend'i için mimari kararları ve kodlama standartl
 - Her istek `credentials: 'include'` ile gider (refresh cookie'sinin gönderilebilmesi için — bkz. `BE-STANDARDS.md` §3).
 - Uygulama açılışında sessizce `/api/auth/refresh` denenir — kullanıcı sayfa yenilendiğinde (F5) oturumda kalır.
 - 401 alan bir istekte otomatik olarak bir kez refresh denenir, başarılıysa orijinal istek tekrarlanır; başarısızsa kullanıcı login'e yönlendirilir (sonsuz döngüye girilmez).
+- Refresh cookie production'da `Secure=true, SameSite=None`, localhost'ta `Secure=false, SameSite=Lax` olarak backend tarafından yönetilir; frontend her iki ortamda da cookie'yi okumaz ve `credentials: 'include'` kullanır.
+- “Ürünlerim” verisi `GET /api/seller/products?page=0&size=20&sort=createdAt,desc` ile alınır; response `Page<ProductResponse>` biçimindedir ve aktif/pasif ürünleri birlikte içerir.
+- Admin ürün moderasyonu `GET /api/admin/products?active=false&search=phone&categoryId=1&page=0&size=20&sort=createdAt,desc` sözleşmesini kullanır; `active` verilmezse tüm ürünler döner.
 
 ## 4. Routing
 
@@ -75,6 +83,8 @@ Backend ile aynı desen (bkz. `PROJECT_PLAN.md` "Git & Deploy Workflow"):
 - Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`).
 - `main`'den `feature/<isim>` branch'i, PR ile merge.
 - CI (`npm run build` + lint) yeşil olmadan PR merge edilmez.
+- AI bir haftalık frontend dilimini tamamladığında son teslim mesajında mutlaka şu dört bilgiyi açıkça yazar: **tamamlanan hafta numarası ve başlığı**, **tamamlanan branch adı**, **sıradaki hafta numarası ve başlığı**, **açılacak yeni branch adı**.
+- Yeni haftaya, mevcut haftanın branch'i `main`'e merge edildikten ve yeni branch güncel `main` üzerinden açıldıktan sonra başlanır.
 
 ## 10. Anti-Pattern Referans Tablosu
 

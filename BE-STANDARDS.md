@@ -30,7 +30,8 @@ Bu doküman, bu projenin backend'i için mimari kararları ve kodlama standartla
 
 ## 1. Mimari
 
-- **Katmanlı mimari:** Controller → Service → Repository → DB. Modüler monolith değil — tek modül, basit paket yapısı (staj projesindeki gibi).
+- **Feature bazlı paketlenmiş katmanlı monolith:** Tek Maven/Spring Boot modülü kullanılır. Üst seviye paketler iş özelliğine göre (`auth`, `user`, `product`, `order`), her feature'ın alt paketleri sorumluluğa göre (`controller`, `dto`, `service`, `repository`, `entity`, gerektiğinde `config`/`security`) ayrılır. Bu düzen modular monolith değildir; paket sınırları bağımsız modül API'leri olarak zorlanmaz.
+- Katman akışı Controller → Service → Repository → DB'dir. Aynı sorumluluğa sahip birden fazla sınıf tek bir toplama sınıfında (`AuthDtos` gibi) birleştirilmez; her DTO kendi Java `record` dosyasında tutulur.
 - Entity hiçbir zaman Controller sınırının dışına (request/response'a) sızmaz; yalnızca DTO'lar taşınır.
 - Entity ↔ DTO dönüşümü manuel Mapper sınıflarıyla yapılır (`ProductMapper`, `OrderMapper` deseni) — MapStruct kullanılmaz, gereksiz bir bağımlılık.
 - Katmanlar arası bağımlılık tek yönlü: Controller → Service → Repository. Controller'a iş mantığı yazılmaz.
@@ -44,7 +45,7 @@ Bu doküman, bu projenin backend'i için mimari kararları ve kodlama standartla
 ## 3. Security & Authentication
 
 - **Access token:** Kısa ömürlü (20 dk), yalnızca `Authorization: Bearer` header ile taşınır, JSON gövdesinde döner — cookie'ye asla konmaz.
-- **Refresh token:** httpOnly, Secure, `SameSite=None` cookie + DB'de (`refresh_tokens`) iz sürülür; her `/refresh` çağrısında rotate edilir (eskisi geçersiz, yenisi verilir).
+- **Refresh token:** httpOnly cookie + DB'de (`refresh_tokens`) iz sürülür; her `/refresh` çağrısında rotate edilir (eskisi geçersiz, yenisi verilir). Cookie politikası ortama bağlıdır: production'da `Secure=true, SameSite=None`, localhost'ta `Secure=false, SameSite=Lax`.
 - Şifreler BCrypt ile hash'lenir; düz metin şifre asla DB'ye yazılmaz veya loglanmaz.
 - Yetkilendirme her zaman deklaratif (`@PreAuthorize("hasRole('...')")`); Controller/Service içinde manuel `if (user == null)` veya rol string karşılaştırması yasak.
 - Sahiplik kontrolü (bir kaynağın gerçekten o kullanıcıya/satıcıya ait olduğu) sorgu seviyesinde yapılır (`findByIdAndSellerId` gibi), asla "çek, sonra kod içinde karşılaştır" değil.
@@ -52,7 +53,7 @@ Bu doküman, bu projenin backend'i için mimari kararları ve kodlama standartla
 - Secrets (`JWT_SECRET`, `RESEND_API_KEY` vb.) yalnızca environment variable; kodda veya `application.yaml`'da default değer yok.
 - Admin self-serve bir endpoint ile oluşturulmaz — yalnızca elle DB güncellemesi.
 - Rate limiting hassas endpoint'lerde zorunlu (`login`, `register`, `checkout`, `forgot-password`).
-- Yerel geliştirmede `Secure` bayrağı bir Spring profile ile kapatılabilir (`app.cookie.secure`), prod'da her zaman `true`.
+- Yerel geliştirmede `app.auth.cookie-secure=false` hem `Secure` bayrağını kapatır hem `SameSite=Lax` seçer; prod'da değer her zaman `true` olur ve `SameSite=None` kullanılır.
 
 ## 4. Kodlama Standartları
 
@@ -60,6 +61,8 @@ Bu doküman, bu projenin backend'i için mimari kararları ve kodlama standartla
 - **Entity:** `@Getter`/`@Setter`/`@Builder` kullanılır; `@Data` yasak (equals/hashCode ve mutability sorunları).
 - **DTO:** Java `record` — immutable, boilerplate'siz.
 - **Validasyon:** Format kontrolleri (`@NotBlank`, `@Email`, `@Positive` vb.) DTO üzerinde + `@Valid`; iş kuralları Service katmanında.
+- Okunabilirlik için sınıf/metot annotation'ları ayrı satırlarda, her statement ayrı satırda tutulur; tek satırlık sıkıştırılmış metotlar ve aynı satırda birden fazla iş yapan ifadeler kullanılmaz.
+- Wildcard import (`import ...*`) kullanılmaz. Builder zincirleri ve uzun fluent API çağrıları mantıksal adımlara göre satırlara bölünür.
 
 ## 5. API & Controller Standartları
 
@@ -118,6 +121,9 @@ Yalnızca **header manipülasyonu gerektiğinde** kullanılır — bu projede en
 ## 11. AI Kullanımı
 
 Bu proje Claude ile birlikte geliştiriliyor. Backend kodu yazılırken bu dokümana ve `PROJECT_PLAN.md`'ye (özellikle Security, Exception Handling, Transaction Yönetimi bölümlerine) uyulması beklenir.
+
+- AI roadmap'te hafta hafta ilerler. Bir haftanın geliştirme ve doğrulaması tamamlandığında son teslim mesajında mutlaka şu dört bilgiyi açıkça yazar: **tamamlanan hafta numarası ve başlığı**, **tamamlanan branch adı**, **sıradaki hafta numarası ve başlığı**, **açılacak yeni branch adı**.
+- Yeni haftanın geliştirmesine, önceki hafta `main`'e merge edildikten ve kullanıcı yeni branch'i güncel `main` üzerinden açtığını doğruladıktan sonra başlanır.
 
 ## 12. Anti-Pattern Referans Tablosu
 
