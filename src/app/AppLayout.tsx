@@ -1,9 +1,12 @@
-import { Heart, Menu, Search, ShoppingCart, UserRound } from 'lucide-react'
+import { Heart, LogOut, Menu, Search, ShoppingCart, UserRound } from 'lucide-react'
 import { Link, Outlet } from 'react-router-dom'
+import { useAuth } from '../features/auth/useAuth'
 
 const navigationItems = ['Elektronik', 'Moda', 'Ev & Yaşam', 'Kozmetik', 'Spor', 'Kitap']
 
 export function AppLayout() {
+  const auth = useAuth()
+
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-slate-950">
       <header className="border-b border-slate-200 bg-white">
@@ -32,7 +35,25 @@ export function AppLayout() {
 
           <nav className="ml-auto flex items-center gap-1 sm:gap-2" aria-label="Kullanıcı işlemleri">
             <HeaderAction icon={Heart} label="Favoriler" />
-            <HeaderAction icon={UserRound} label="Hesabım" />
+            {auth.user ? (
+              <>
+                <HeaderAction icon={UserRound} label={auth.user.username} />
+                <button
+                  className="flex items-center gap-2 rounded-xl p-2 text-slate-700 transition hover:bg-slate-100 sm:px-3"
+                  onClick={() => void auth.logout()}
+                  type="button"
+                >
+                  <LogOut aria-hidden="true" size={21} />
+                  <span className="sr-only">Çıkış yap</span>
+                </button>
+              </>
+            ) : (
+              <Link className="flex items-center gap-2 rounded-xl p-2 text-slate-700 transition hover:bg-slate-100 sm:px-3" to="/login">
+                <UserRound aria-hidden="true" size={21} />
+                <span className="hidden text-sm font-semibold xl:inline">Giriş yap</span>
+                <span className="sr-only xl:hidden">Giriş yap</span>
+              </Link>
+            )}
             <HeaderAction icon={ShoppingCart} label="Sepetim" />
           </nav>
         </div>
