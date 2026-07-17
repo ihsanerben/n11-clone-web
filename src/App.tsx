@@ -11,6 +11,10 @@ import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { SellerOnboardingPage } from './pages/SellerOnboardingPage'
 import { AdminSellersPage } from './pages/AdminSellersPage'
 import { RequireRole } from './features/auth/RequireRole'
+import { ProductsPage } from './pages/ProductsPage'
+import { ProductDetailPage } from './pages/ProductDetailPage'
+import { SellerProductsPage } from './pages/SellerProductsPage'
+import { AdminProductsPage } from './pages/AdminProductsPage'
 import { useAuth } from './features/auth/useAuth'
 
 function App() {
@@ -24,6 +28,8 @@ function App() {
     <Routes>
       <Route element={<AppLayout />}>
         <Route index element={<HomePage />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="products/:productId" element={<ProductDetailPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="check-email" element={<CheckEmailPage />} />
@@ -32,6 +38,8 @@ function App() {
         <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route path="seller" element={<RequireRole roles={['USER', 'SELLER']}><SellerOnboardingPage /></RequireRole>} />
         <Route path="admin/sellers" element={<RequireRole roles={['ADMIN']}><AdminSellersPage /></RequireRole>} />
+        <Route path="seller/products" element={<RequireRole roles={['SELLER']}><SellerProductsPage /></RequireRole>} />
+        <Route path="admin/products" element={<RequireRole roles={['ADMIN']}><AdminProductsPage /></RequireRole>} />
         <Route path="404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate replace to="/404" />} />
       </Route>

@@ -1,4 +1,5 @@
 import { ArrowRight, BadgeCheck, PackageCheck, Store } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { HealthStatus } from '../features/health/HealthStatus'
 
 const benefits = [
@@ -20,9 +21,9 @@ export function HomePage() {
             <p className="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
               Ürünleri keşfet, satıcıları karşılaştır ve alışverişini tek bir yerden kolayca yönet.
             </p>
-            <button className="mt-8 inline-flex items-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-700/20 transition hover:bg-brand-800" type="button">
+            <Link className="mt-8 inline-flex items-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-brand-700/20 transition hover:bg-brand-800" to="/products">
               Alışverişe başla <ArrowRight size={18} />
-            </button>
+            </Link>
           </div>
 
           <div className="relative">
