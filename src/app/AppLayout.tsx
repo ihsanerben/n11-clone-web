@@ -34,6 +34,9 @@ export function AppLayout() {
           </label>
 
           <nav className="ml-auto flex items-center gap-1 sm:gap-2" aria-label="Kullanıcı işlemleri">
+            {auth.user?.role === 'USER' && <Link className="hidden text-sm font-bold text-brand-700 sm:block" to="/seller">Satıcı ol</Link>}
+            {auth.user?.role === 'SELLER' && <Link className="hidden text-sm font-bold text-brand-700 sm:block" to="/seller/products">Satıcı paneli</Link>}
+            {auth.user?.role === 'ADMIN' && <Link className="hidden text-sm font-bold text-brand-700 sm:block" to="/admin/sellers">Yönetim</Link>}
             <HeaderAction icon={Heart} label="Favoriler" />
             {auth.user ? (
               <>

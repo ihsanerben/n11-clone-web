@@ -8,6 +8,9 @@ import { CheckEmailPage } from './pages/CheckEmailPage'
 import { VerifyEmailPage } from './pages/VerifyEmailPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
+import { SellerOnboardingPage } from './pages/SellerOnboardingPage'
+import { AdminSellersPage } from './pages/AdminSellersPage'
+import { RequireRole } from './features/auth/RequireRole'
 import { useAuth } from './features/auth/useAuth'
 
 function App() {
@@ -27,6 +30,8 @@ function App() {
         <Route path="verify-email" element={<VerifyEmailPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="reset-password" element={<ResetPasswordPage />} />
+        <Route path="seller" element={<RequireRole roles={['USER', 'SELLER']}><SellerOnboardingPage /></RequireRole>} />
+        <Route path="admin/sellers" element={<RequireRole roles={['ADMIN']}><AdminSellersPage /></RequireRole>} />
         <Route path="404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate replace to="/404" />} />
       </Route>
