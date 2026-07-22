@@ -21,7 +21,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-`.env.local` içindeki `VITE_API_BASE_URL`, çalışan backend adresini göstermelidir. Varsayılan yerel değer `http://localhost:8080` şeklindedir.
+`.env.local` içindeki `VITE_API_BASE_URL`, çalışan backend adresini göstermelidir. Varsayılan yerel değer `http://localhost:8081` şeklindedir.
 
 ## Kontroller
 
